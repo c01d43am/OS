@@ -1,27 +1,22 @@
-/* filepath: /d:/Personal/OS/OS/linker.ld */
-ENTRY(main)
+ENTRY(_start)
 
-SECTIONS
-{
-    . = 0x100000;
+SECTIONS {
+    . = 1M; /* Load kernel at 1MB */
 
-    .text :
-    {
+    .text BLOCK(4K) : ALIGN(4K) {
         *(.text)
     }
 
-    .rodata :
-    {
+    .rodata BLOCK(4K) : ALIGN(4K) {
         *(.rodata)
     }
 
-    .data :
-    {
+    .data BLOCK(4K) : ALIGN(4K) {
         *(.data)
     }
 
-    .bss :
-    {
+    .bss BLOCK(4K) : ALIGN(4K) {
+        *(COMMON)
         *(.bss)
     }
 }
