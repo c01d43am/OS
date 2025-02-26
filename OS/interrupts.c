@@ -13,12 +13,15 @@ struct IDTEntry {
 } __attribute__((packed));
 
 struct IDTDescriptor {
-    uint16_t limit;
-    uint64_t base;
+    uint16_t size;
+    uint32_t base;  // Change from uint64_t to uint32_t for 32-bit compatibility
 } __attribute__((packed));
 
 struct IDTEntry idt[IDT_SIZE];
-struct IDTDescriptor idt_descriptor = { sizeof(idt) - 1, (uint64_t)idt };
+struct IDTDescriptor idt_descriptor = { 
+    sizeof(idt) - 1, 
+    (uintptr_t)idt   // Change uint64_t to uintptr_t
+};
 
 void load_idt();
 void keyboard_handler();
@@ -30,7 +33,7 @@ void setup_idt() {
     idt[0x21].zero = 0;
     idt[0x21].type_attr = 0x8E; // Interrupt Gate
     idt[0x21].offset_middle = (uint16_t)((uintptr_t)keyboard_handler >> 16);
-    idt[0x21].offset_high = (uint32_t)((uintptr_t)keyboard_handler >> 32);
+    idt[0x21].offset_high = 0;  // Since we are in 32-bit, offset_high is always 0
     idt[0x21].reserved = 0;
 
     load_idt();  // Load the new IDT

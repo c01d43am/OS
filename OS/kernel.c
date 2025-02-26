@@ -8,6 +8,8 @@ void print_string(const char* str) {
     }
 }
 
+extern void setup_idt();  // Declare it before calling
+
 void kernel_main() {
     setup_idt(); // Set up the IDT for handling keyboard input
     
