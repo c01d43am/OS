@@ -9,11 +9,11 @@ uint8_t inb(uint16_t port) {
     return result;
 }
 
-void keyboard_handler() {
-    uint8_t keycode = inb(KEYBOARD_DATA_PORT);
+// void keyboard_handler() {
+//     uint8_t keycode = inb(KEYBOARD_DATA_PORT);
     
-    if (keycode == 0x1C) { // Enter key
-        char *video_memory = (char*) 0xB8000;
-        video_memory[160] = 'E'; // Display 'E' on Enter press
-    }
-}
+//     if (keycode == 0x1C) { // Enter key
+//         char *video_memory = (char*) 0xB8000;
+//         video_memory[160] = 'E'; // Display 'E' on Enter press
+//     }
+// }
