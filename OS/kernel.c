@@ -11,7 +11,9 @@ void print_string(const char* str) {
 void kernel_main() {
     setup_idt(); // Set up the IDT for handling keyboard input
     
-    print_string("Welcome to my OS!");
+    char *video_memory = (char *)0xB8000;
+    video_memory[0] = 'K';  // Display 'K' on screen
+    video_memory[1] = 0x07; // White text on black background
 
     while (1);
 }
