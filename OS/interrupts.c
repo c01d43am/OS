@@ -23,8 +23,8 @@ struct IDTDescriptor idt_descriptor = {
     (uintptr_t)idt   // Change uint64_t to uintptr_t
 };
 
-void load_idt();
-void keyboard_handler();
+extern void load_idt();
+extern void keyboard_handler();
 
 void setup_idt() {
     // Set up a basic IDT entry (e.g., for keyboard interrupt 0x21)
