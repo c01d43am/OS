@@ -1,3 +1,13 @@
+[BITS 64]
+[GLOBAL _start]  ; Define the entry symbol
+
+extern kernel_main   ; Tell assembler kernel_main() exists in C
+
+section .text
+_start:
+    call kernel_main  ; Call the kernel main function
+    hlt               ; Halt the CPU
+
 [BITS 32]
 [GLOBAL multiboot_header]
 [EXTERN kernel_main]
@@ -10,8 +20,8 @@ multiboot_header:
     dd -(0x1BADB002 + 0x00) ; Checksum (magic + flags + checksum = 0)
 
 SECTION .text
-global _start
-_start:
+global _start32
+_start32:
     ; Load stack
     mov esp, stack_top
     call kernel_main  ; Jump to kernel_main in C

@@ -1,5 +1,5 @@
 #include <stdint.h>
-
+#include "interrupts.h"
 #define IDT_SIZE 256
 
 struct IDTEntry {
