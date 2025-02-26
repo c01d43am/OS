@@ -1,21 +1,27 @@
 ENTRY(_start)
 
-SECTIONS {
-    . = 1M; /* Load kernel at 1MB */
+SECTIONS
+{
+    . = 1M;
 
-    .text BLOCK(4K) : ALIGN(4K) {
+    .text :
+    {
+        *(.multiboot)
         *(.text)
     }
 
-    .rodata BLOCK(4K) : ALIGN(4K) {
+    .rodata :
+    {
         *(.rodata)
     }
 
-    .data BLOCK(4K) : ALIGN(4K) {
+    .data :
+    {
         *(.data)
     }
 
-    .bss BLOCK(4K) : ALIGN(4K) {
+    .bss :
+    {
         *(COMMON)
         *(.bss)
     }
