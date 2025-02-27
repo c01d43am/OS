@@ -2,28 +2,35 @@
 [ORG 0x7C00]      ; BIOS loads us at 0x7C00
 
 start:
+    mov ax, 0x07C0     ; Set segment registers
+    mov ds, ax
+    mov es, ax
+    mov fs, ax
+    mov gs, ax
+
     ; Print "Loading Kernel..."
     mov si, loading_msg
     call print_string
 
     ; Load kernel from disk
-    mov ah, 0x02        ; BIOS read function
-    mov al, 10          ; Read 10 sectors
-    mov ch, 0           ; Cylinder 0
-    mov cl, 2           ; Start at sector 2
-    mov dh, 0           ; Head 0
-    mov dl, 0x80        ; First hard drive
-    mov bx, 0x1000      ; Load kernel at 0x1000:0000
-    int 0x13            ; BIOS interrupt to read disk
-    jc disk_error       ; Jump if read failed
+    call load_kernel
+    jmp 0x1000:0       ; Jump to kernel at 0x1000:0000
 
-    ; Switch to 32-bit Protected Mode
-    cli                 ; Disable interrupts
-    lgdt [gdt_descriptor]
-    mov eax, cr0
-    or eax, 1
-    mov cr0, eax
-    jmp CODE_SEG:init_32
+loading_msg db "Loading Kernel...", 0
+
+load_kernel:
+    mov ax, 0x1000     ; Set kernel segment
+    mov es, ax
+    mov bx, 0x0000     ; Destination offset
+    mov ah, 0x02       ; BIOS read sectors function
+    mov al, 10         ; Number of sectors to read (adjust as needed)
+    mov ch, 0x00       ; Cylinder 0
+    mov dh, 0x00       ; Head 0
+    mov cl, 0x02       ; Start at sector 2 (1st is bootloader)
+    int 0x13           ; Call BIOS disk interrupt
+    jc disk_error      ; If error, halt
+
+    ret
 
 disk_error:
     hlt
@@ -47,8 +54,6 @@ init_32:
     call KERNEL_ENTRY  ; Jump to kernel_main()
 
     hlt
-
-loading_msg db "Loading Kernel...", 0
 
 ; GDT (Global Descriptor Table)
 gdt_descriptor:
