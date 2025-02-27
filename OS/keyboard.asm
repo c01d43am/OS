@@ -1,7 +1,7 @@
 [BITS 64]
 
 global keyboard_handler
-extern keyboard_callback  ; Define in C or another file
+extern keyboard_callback  ; Defined in kernel.c
 
 section .text
 
@@ -11,7 +11,7 @@ keyboard_handler:
     push rcx
     push rdx
 
-    call keyboard_callback   ; Call external function
+    call keyboard_callback   ; Call the external function
 
     pop rdx
     pop rcx

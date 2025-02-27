@@ -7,16 +7,23 @@ section .bss
 align 16
 idt: resb 4096  ; Reserve space for IDT (256 entries * 16 bytes each)
 
+section .data
+idt_descriptor: 
+    dw 0       ; IDT limit (size - 1)
+    dq 0       ; Base address
+
 section .text
 
 load_idt:
-    mov rax, idt_end - idt - 1  ; Compute IDT size
-    mov word [idt_descriptor], ax  ; Store limit
+    lea rax, [idt_end]       ; Load address of idt_end
+    sub rax, idt             ; Compute size of IDT
+    dec rax                  ; Subtract 1 (for limit)
+    mov word [idt_descriptor], ax  ; Store limit (lower 16 bits)
 
-    lea rax, [idt]                 ; Load base address of IDT
-    mov qword [idt_descriptor + 2], rax  
+    lea rax, [idt]           ; Load base address of IDT
+    mov qword [idt_descriptor + 2], rax  ; Store base address
 
-    lidt [idt_descriptor]           ; Load the new IDT
+    lidt [idt_descriptor]    ; Load the new IDT
     ret
 
 set_idt_entry:
@@ -31,10 +38,5 @@ set_idt_entry:
     mov byte  [rax + 10], 0  ; Reserved
     mov byte  [rax + 11], cl ; Store flags
     ret
-
-section .data
-idt_descriptor:
-    dw 0          ; IDT limit (size - 1)
-    dq 0          ; Base address
 
 idt_end:
