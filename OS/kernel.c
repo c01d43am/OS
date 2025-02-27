@@ -1,4 +1,5 @@
 #include "interrupts.h"
+#include "keyboard.h"
 
 void print_string(const char* str) {
     char* video_memory = (char*) 0xB8000;
@@ -17,6 +18,10 @@ void setup_idt() {
 
 void kernel_main() {
     setup_idt(); // Set up the IDT for handling keyboard input
+
+    char *video_memory = (char *)0xB8000;
+    video_memory[0] = 'K';  // Display 'K' on screen
+    video_memory[1] = 0x07; // White text on black background
 
     print_string("Kernel Loaded!");
 
