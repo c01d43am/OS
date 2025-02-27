@@ -1,6 +1,9 @@
 [BITS 64]
-[GLOBAL keyboard_handler]
-[EXTERN keyboard_callback]  ; Reference a function in C
+
+global keyboard_handler
+extern keyboard_callback  ; Define in C or another file
+
+section .text
 
 keyboard_handler:
     push rax
@@ -8,10 +11,10 @@ keyboard_handler:
     push rcx
     push rdx
 
-    call keyboard_callback  ; Call C function to handle input
+    call keyboard_callback   ; Call external function
 
     pop rdx
     pop rcx
     pop rbx
     pop rax
-    iretq  ; Return from interrupt
+    iretq  ; Return from interrupt (64-bit)

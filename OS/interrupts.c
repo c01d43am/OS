@@ -38,3 +38,7 @@ void setup_idt() {
 
     load_idt();  // Load the new IDT
 }
+
+void keyboard_handler() {
+    // Your keyboard handler code here
+}
